@@ -1,0 +1,77 @@
+// Begin wifi command | beginWifi:ssid:pass | beginWifi:ssid:nopass
+    if (incomingByte.startsWith("begin"))
+    {
+      // Get parameters from command
+      int c1 = incomingByte.indexOf(":"); 
+      int c2 = incomingByte.lastIndexOf(":");
+      String ssidS = incomingByte.substring(c1+1, c2);
+      String passwordS = incomingByte.substring(c2+1, incomingByte.length());
+
+      // Debug statements
+      Serial.println(ssidS);
+      Serial.println(passwordS);
+
+      // Begin wifi
+      beginWifi(ssidS, passwordS);
+    }
+
+
+
+
+
+
+
+String processor(const String& var){
+  if (var == "SLIDERVALUE"){
+    return sliderValue;
+  }
+  return String();
+}
+
+void beginWifi(String ssidS, String passwordS) {
+  if (!passwordS.equals("nopass")) {
+    const char* ssid = ssidS.c_str();
+    const char* password = passwordS.c_str();
+
+    Serial.println("Connecting with parameter: pass");
+    WiFi.begin(ssid, password);
+  } else {
+    const char* ssid = ssidS.c_str();
+
+    Serial.println("Connecting with parameter: nopass");
+    WiFi.begin(ssid); 
+  }
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.println("Connecting...");
+  }
+
+  Serial.println(WiFi.localIP());
+  Serial.println("--------");
+
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/html", index_html, processor);
+  });
+
+  server.on("/slider", HTTP_GET, [] (AsyncWebServerRequest *request) {
+    String message;
+    if (request->hasParam(inputParameter)) {
+      message = request->getParam(inputParameter)->value();
+      sliderValue = message;
+    
+      if (requestOngoing == false) { 
+        requestOngoing = true; 
+        moveServo(sliderValue.toInt()); 
+        Serial.println("request sent"); // debug statement
+      }
+    } else {
+      message = "No message sent";
+    }
+    
+    Serial.println(message);
+    request->send(200, "text/plain", "OK");
+  });
+      
+  server.begin();
+}

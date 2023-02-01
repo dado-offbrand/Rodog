@@ -1,0 +1,38 @@
+/* 
+ * This is for moving legs to their desired positions in order to avoid moving one servo on one leg at a time, 
+ * as that would allow for Rodog to fall over
+ *
+ * All desired positions should be pre-calculated with inverse kinematics
+ */
+
+bool allLegsMoved = false;
+int legsMoved = 0;
+
+ESP32_Servo_h[] S = { array of all servos }
+int[] SP = { all desired servo positions in order from x4 SHOULDER/MID/LOW }
+int[] SPS = { array of ints of all current servo positions, should be updated with ++ and read before iteration }
+
+while (!allLegsMoved) 
+{
+   for (var L = 0; L <= NUM_LEGS; L++)
+   {
+	// If this leg has finished moving, skip this iteration
+	if (SP[L]==SPS[L]) { legsMoved+=1; continue; }
+
+	// If the desired position is greater than the current position, iterate 1 degrees upwards and update the position
+	if (SP[L] > SPS[L]) 
+        {
+	   S[L].write(SPS[L] + 1);
+           SPS[L] += 1;
+        }
+	// If the desired position is less than the current position, iterate 1 degrees downwards and update the position
+	else if (SP[L] < SPS[L]) 
+	{
+	   S[L].write(SPS[L] - 1);
+           SPS[L] -= 1;
+	}
+
+	// If all of the legs are moved (all 12 legs), then notice that all legs have been moved
+        if(legsMoved==12) { allLegsMoved=true; }
+   }
+}
