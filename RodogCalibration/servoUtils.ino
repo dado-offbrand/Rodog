@@ -32,7 +32,6 @@ void tbMoveServo(int des) {
   Serial.println(String(des) + " :: " + String(cur));
 
   //.. MOVE SERVO IN DIRECTION
-  //.. debug: MathTest.js: https://codehs.com/sandbox/karelseviltwin/mathtest
   if (des > cur) {
     //move forwards (++)
     Serial.println("action: moving forwards");
