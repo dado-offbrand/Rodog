@@ -1,1 +1,0 @@
- - multi servo movement? (stop points, switch, etc.)
