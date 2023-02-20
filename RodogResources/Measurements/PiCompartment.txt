@@ -1,0 +1,6 @@
+PI COMPARTMENT
+
+pi w: 2.302 in
+pi l: 3.462 in
+
+pi sd: 0.7 in
