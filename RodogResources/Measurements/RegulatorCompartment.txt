@@ -3,8 +3,8 @@ FAN/REGULATOR COMPARTMENT
 reg w: 0.84 in
 reg l: 1.72 in
 reg h: 0.61 in (boundary)
-
-fan w: 0.305 in
+	
+fan w: 0.31 in
 fan l: 1.184 in
 fan h: 1.184 in
 
