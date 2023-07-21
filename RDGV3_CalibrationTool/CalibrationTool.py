@@ -5,7 +5,7 @@ import board
 
 i2c = busio.I2C(board.SCL, board.SDA)
 
-pca = PCA9685(i2c)
+pca = PCA9685(i2c_bus=i2c)
 pca.frequency = 50
 pca.channels[0].duty_cycle = 0
 
@@ -22,7 +22,9 @@ if __name__ == '__main__':
     else:
         channel = sys.argv[1]
         angle = sys.argv[2]
-        position_servo(channel, angle) # /home/rodog/Desktop/RDGV2_CalibrationTool/
+        position_servo(channel, angle)
 
     pca.channels[0].duty_cycle = 0
+
+# command to run via SSH terminal
 # python /home/rodog/Desktop/RDGV2_CalibrationTool/main.py 0 90
