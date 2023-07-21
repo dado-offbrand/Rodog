@@ -1,4 +1,0 @@
-BATTERY COMPARTMENT
-
-batt w: 0.82"
-batt l: 3"
