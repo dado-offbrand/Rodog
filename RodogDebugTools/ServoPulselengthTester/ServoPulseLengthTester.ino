@@ -1,8 +1,13 @@
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
 
-uint16_t currentMin = 150; // default min
-uint16_t currentMax = 600; // default max
+/*
+ * Old default minumum: 150
+ * Old default maximum: 600
+ */
+
+uint16_t currentMin = 215; // default min
+uint16_t currentMax = 675; // default max
 uint16_t currentPulse = currentMin; // minumum SAFE angle by default
 
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(0x40);
@@ -14,54 +19,61 @@ void setup() {
   pwm.setPWMFreq(60);
   Serial.println("Initialized");
 
-  Serial.println("Commands: setmin X, setmax X, setcurrent X, sweep, to");
+  Serial.println("Commands: setmin X, setmax X, setcurrent X, sweep, topulse");
 }
 
 void loop() 
 {
   if (Serial.available() > 0) 
   {
+    // get command
     String command = Serial.readStringUntil(' ');
     command.trim();
     uint16_t commandParam = 0;
 
+    // get param
     if (Serial.available() > 0) 
     {
       commandParam = Serial.parseInt();  
     }
 
-    switch (command) 
+    // handle command with param
+    if (command == "setmin") 
     {
-      case "setmin":
-        currentMin = commandParam;
-        Serial.print("Set min to: ")
-        Serial.println(commandParam);
-        break;
-      case "setmax":
-        currentMax = commandParam;
-        Serial.print("Set max to: ")
-        Serial.println(commandParam);
-        break;
-      case "setcurrent":
-        currentMin = commandParam;
-        Serial.print("Set current to: ")
-        Serial.println(commandParam);
-        break;
-      case "sweep":
-        Serial.println("Starting sweep");
-        for (uint16_t i = currentMin; i <= currentMax; i++) 
-        {
-          pwm.setPWM(0, 0, i);
-          pwm.setPWM(1, 0, i);
-          delay(5); // unsure how much time this will take, so small delay only
-        }
-        Serial.println("Swept from min to max");
-        break;
-      case "to":
-        pwm.setPWM(0, 0, currentPulse);
-        pwm.setPWM(1, 0, currentPulse);
-        Serial.println("Moved to current pulselength");
-        break;
+      currentMin = commandParam;
+      Serial.print("Set min to: ");
+      Serial.println(commandParam);
+    }
+    else if (command == "setmax") 
+    {
+      currentMax = commandParam;
+      Serial.print("Set max to: ");
+      Serial.println(commandParam);
+    }
+    else if (command == "setcurrent") 
+    {
+      currentPulse = commandParam;
+      Serial.print("Set current pulse to: ");
+      Serial.println(commandParam);
+    }
+    else if (command == "topulse") 
+    {
+      pwm.setPWM(0, 0, currentPulse);
+      Serial.println("Moved to current pulselength");
+    }
+    else if (command == "sweep") 
+    {
+      Serial.println("Resetting servo position");
+      pwm.setPWM(0, 0, currentMin);
+      delay(1000);
+      
+      Serial.println("Starting sweep");
+      for (uint16_t i = currentMin; i < currentMax; i++) 
+      {
+        pwm.setPWM(0, 0, i);
+        delay(5);
+      }
+      Serial.println("Swept from min to max");
     }
   }
 }
