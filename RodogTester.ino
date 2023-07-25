@@ -41,13 +41,13 @@ void loop() {
   Serial.println("Finished rotating to 45deg");
   delay(1000);
 
-  Serial.println("Rotating to 90deg");
+  Serial.println("Rotating to 0deg");
   for (int i = 45; i >= 0; i--) 
   {
     pwm.setPWM(15, 0, angleToPulse(i));
     delay(15);
   }
-  Serial.println("Finished rotating to 90deg");
+  Serial.println("Finished rotating to 0deg");
   delay(1000);
 }
 
