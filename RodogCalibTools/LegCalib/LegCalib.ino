@@ -8,9 +8,9 @@
 #define UPPER_CHANNEL 1
 #define LOWER_CHANNEL 2
 
-uint8_t shoulderRot 90
-uint8_t upperLegRot 90
-uint8_t lowerLegRot 90
+uint8_t shoulderRot = 90;
+uint8_t upperLegRot = 90;
+uint8_t lowerLegRot = 90;
 
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(0x40);
 
@@ -35,35 +35,40 @@ void loop() {
     {
       commandParam = Serial.parseInt();  
     }
-
-    switch(command) 
+    else 
     {
-      case "toShoulder":
-        pwm.setPWM(SHOULDER_CHANNEL, 0, shoulderRot);
-        break;
-      case "toUpper":
-        pwm.setPWM(UPPER_CHANNEL, 0, upperLegRot);
-        break;
-      case "toLower":
-        pwm.setPWM(LOWER_CHANNEL, 0, lowerLegRot);
-        break;
-      case "toAll":
-        pwm.setPWM(SHOULDER_CHANNEL, 0, shoulderRot);
-        pwm.setPWM(UPPER_CHANNEL, 0, upperLegRot);
-        pwm.setPWM(LOWER_CHANNEL, 0, lowerLegRot);
-        break;
-      case "setShoulder":
-        shoulderRot = commandParam;
-        break;
-      case "setUpper":
-        upperLegRot = commandParam;
-        break;
-      case "setLower":
-        lowerLegRot = commandParam;
-        break;
+      commandParam = 0; 
     }
 
+    processCommand(command, commandParam);
     delay(5);
+  }
+}
+
+void processCommand(String command, int commandParam) {
+  Serial.print("Processing command: ");
+  Serial.println(command); 
+  
+  if (command == "toShoulder") {
+    pwm.setPWM(SHOULDER_CHANNEL, 0, shoulderRot);
+  } else if (command == "toUpper") {
+    pwm.setPWM(UPPER_CHANNEL, 0, upperLegRot);
+  } else if (command == "toLower") {
+    pwm.setPWM(LOWER_CHANNEL, 0, lowerLegRot);
+  } else if (command == "toAll") {
+    pwm.setPWM(SHOULDER_CHANNEL, 0, shoulderRot);
+    pwm.setPWM(UPPER_CHANNEL, 0, upperLegRot);
+    pwm.setPWM(LOWER_CHANNEL, 0, lowerLegRot);
+  } else if (command == "setShoulder") {
+    shoulderRot = commandParam;
+  } else if (command == "setUpper") {
+    upperLegRot = commandParam;
+  } else if (command == "setLower") {
+    lowerLegRot = commandParam;
+  }
+  else 
+  {
+    Serial.print("Command was unknown");
   }
 }
 
