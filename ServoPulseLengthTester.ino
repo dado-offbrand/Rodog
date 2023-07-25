@@ -1,8 +1,8 @@
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
 
-uint16_t currentMin = 600; // default min
-uint16_t currentMax = 2400; // default max
+uint16_t currentMin = 150; // default min
+uint16_t currentMax = 600; // default max
 uint16_t currentPulse = currentMin; // minumum SAFE angle by default
 
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(0x40);
