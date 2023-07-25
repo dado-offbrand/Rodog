@@ -24,14 +24,13 @@ void setup() {
 }
 
 void loop() {
-  pwm.setPWM(0, 0, angleToPulse(180));
-  pwm.setPWM(1, 0, angleToPulse(180));
-  //Serial.println("Attempted to move both to 90");
-  delay(2000);
-  pwm.setPWM(0, 0, angleToPulse(0));
-  pwm.setPWM(1, 0, angleToPulse(0));
-  //Serial.println("Attempted to move both to 0\n");
-  delay(2000);
+  for (i = 0; i <= 180; i+=45) 
+  {
+    pwm.setPWM(0, 0, angleToPulse(i));
+    pwm.setPWM(1, 0, angleToPulse(i));
+    //pwm.setPWM(2, 0, angleToPulse(i)); testing two different servos instead of all 3 on a leg temporarily
+    delay(2000);
+  }
 }
 
 uint16_t angleToPulse(int angle) {
