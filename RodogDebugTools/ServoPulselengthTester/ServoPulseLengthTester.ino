@@ -25,7 +25,7 @@ void loop()
     command.trim();
     uint16_t commandParam = 0;
 
-    if Serial.available() > 0) 
+    if (Serial.available() > 0) 
     {
       commandParam = Serial.parseInt();  
     }
