@@ -1,16 +1,8 @@
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
 
-#define SERVO_PMIN 150 // 600 is MICROSECONDS
-#define SERVO_PMAX 600 // 2400 is MICROSECONDS
-
-#define SHOULDER_CHANNEL 0
-#define UPPER_CHANNEL 1
-#define LOWER_CHANNEL 2
-
-uint8_t shoulderRot = 90;
-uint8_t upperLegRot = 90;
-uint8_t lowerLegRot = 90;
+#define SERVO_PMIN 215 // 600 is MICROSECONDS
+#define SERVO_PMAX 675 // 2400 is MICROSECONDS
 
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(0x40);
 
@@ -20,8 +12,7 @@ void setup() {
   pwm.begin();
   pwm.setPWMFreq(60);
   Serial.println("Initialized\n");
-  Serial.println("Commands: toShoulder, toUpper, toLower, toAll");
-  Serial.println("setShoulder, setUpper, setLower");
+  Serial.println("Commands: m1 0-180, m2 0-180, m3 0-180");
 }
 
 void loop() {
@@ -35,40 +26,21 @@ void loop() {
     {
       commandParam = Serial.parseInt();  
     }
-    else 
+
+    if (command == "m1") 
     {
-      commandParam = 0; 
+      pwm.setPWM(0, 0, angleToPulse(commandParam));  
     }
-
-    processCommand(command, commandParam);
+    else if (command == "m2")
+    {
+      pwm.setPWM(1, 0, angleToPulse(commandParam));  
+    }
+    else if (command == "m3") 
+    {
+      pwm.setPWM(2, 0, angleToPulse(commandParam));  
+    }
+    
     delay(5);
-  }
-}
-
-void processCommand(String command, int commandParam) {
-  Serial.print("Processing command: ");
-  Serial.println(command); 
-  
-  if (command == "toShoulder") {
-    pwm.setPWM(SHOULDER_CHANNEL, 0, shoulderRot);
-  } else if (command == "toUpper") {
-    pwm.setPWM(UPPER_CHANNEL, 0, upperLegRot);
-  } else if (command == "toLower") {
-    pwm.setPWM(LOWER_CHANNEL, 0, lowerLegRot);
-  } else if (command == "toAll") {
-    pwm.setPWM(SHOULDER_CHANNEL, 0, shoulderRot);
-    pwm.setPWM(UPPER_CHANNEL, 0, upperLegRot);
-    pwm.setPWM(LOWER_CHANNEL, 0, lowerLegRot);
-  } else if (command == "setShoulder") {
-    shoulderRot = commandParam;
-  } else if (command == "setUpper") {
-    upperLegRot = commandParam;
-  } else if (command == "setLower") {
-    lowerLegRot = commandParam;
-  }
-  else 
-  {
-    Serial.print("Command was unknown");
   }
 }
 
