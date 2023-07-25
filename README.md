@@ -24,5 +24,8 @@
 > - Fusion 360 for CAD design
 > - FlashForge Adventure 3 Lite for quick test parts
 > - Qidi Imates-s for more solid finalized parts
-> - Termius for SSH connection to RPI
-> - PyCharm Community for programming
+> - Arduino IDE for programming
+
+# Major Changelog
+
+> - Switched to Arduino platform due to current component compatibility issues (ESP32 devboard)
