@@ -29,7 +29,7 @@ void setup() {
 }
 
 void loop() {
-  for (size_t i = 0; i <= 180; i+=15) // do not optimize to uint16_t or uint8_t
+  for (size_t i = 0; i < 180; i+=15) // do not optimize to uint16_t or uint8_t
   {
     Serial.println(i);
     pwm.setPWM(0, 0, angleToPulse(i));
@@ -40,7 +40,7 @@ void loop() {
   Serial.println("Finished a loop");
   delay(3000);
 
-  for (size_t i = 180; i >= 0; i-=15) // do not optimize to uint16_t or uint8_t
+  for (size_t i = 180; i > 0; i-=15) // do not optimize to uint16_t or uint8_t
   {
     Serial.println(i);
     pwm.setPWM(0, 0, angleToPulse(i));
